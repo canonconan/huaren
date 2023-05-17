@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+     <style type="text/css">
+         body, html {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+         #allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+     </style>
+     <script src="https://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=A3CklGvnFOjkAzKzay2dySgfdig0GKz4&s=1"></script>
+ 
+     <title>车辆运行轨迹测试</title>
+     </head>
+ <body>
+ <input id="allmap_value" value="" style="display:none;">
+ <div id="allmap"></div>
+ </body>
+ </html>
+ <script type="text/javascript">
+ $(function(){
+ //初始化
+ drawGreenAddress(0,"red",4);
+ //show_mycat($("#allmap_value").val(),list[index].Long,list[index].Lat);
+ })
+ 
+     var timer;     //定时器
+     var index = 0; //记录播放到第几个point
+     var list = [
+   {Long:110.3149,Lat:25.338595},
+{Long:110.314215,Lat:25.337055},
+{Long:110.31377,Lat:25.335005},
+{Long:110.31367,Lat:25.33249},
+{Long:110.313625,Lat:25.330722},
+{Long:110.314005,Lat:25.330305},
+{Long:110.316087,Lat:25.329762},
+{Long:110.319425,Lat:25.328865},
+{Long:110.321355,Lat:25.327612},
+{Long:110.320215,Lat:25.325117},
+{Long:110.318757,Lat:25.322467},
+{Long:110.318015,Lat:25.32132},
+{Long:110.318015,Lat:25.32132},
+{Long:110.317742,Lat:25.32087},
+{Long:110.31723,Lat:25.319657},
+{Long:110.31675,Lat:25.319347},
+{Long:110.315035,Lat:25.31997},
+{Long:110.315955,Lat:25.32045},
+{Long:110.318125,Lat:25.31975},
+{Long:110.321102,Lat:25.318765},
+{Long:110.32402,Lat:25.31655},
+{Long:110.324865,Lat:25.313232},
+{Long:110.324855,Lat:25.310162},
+{Long:110.324855,Lat:25.307175},
+{Long:110.324852,Lat:25.304252},
+{Long:110.325165,Lat:25.301167},
+{Long:110.325585,Lat:25.297835},
+{Long:110.325977,Lat:25.29471},
+{Long:110.326345,Lat:25.291792},
+{Long:110.32674,Lat:25.289142},
+{Long:110.32724,Lat:25.28643},
+{Long:110.32772,Lat:25.283692},
+{Long:110.327885,Lat:25.282802},
+{Long:110.327885,Lat:25.282802},
+{Long:110.328045,Lat:25.28201},
+{Long:110.32849,Lat:25.279912},
+{Long:110.328995,Lat:25.27738},
+{Long:110.329285,Lat:25.274485},
+{Long:110.329275,Lat:25.27379},
+{Long:110.329232,Lat:25.271972},
+{Long:110.32884,Lat:25.26912},
+{Long:110.328427,Lat:25.265482},
+{Long:110.328475,Lat:25.26213},
+{Long:110.328582,Lat:25.258552},
+{Long:110.328457,Lat:25.255112},
+{Long:110.326522,Lat:25.25258},
+{Long:110.32697,Lat:25.251},
+{Long:110.328675,Lat:25.2488},
+{Long:110.33103,Lat:25.246835},
+{Long:110.334007,Lat:25.24522},
+{Long:110.337062,Lat:25.243182},
+{Long:110.33961,Lat:25.240935},
+{Long:110.342212,Lat:25.237985},
+{Long:110.344525,Lat:25.235395},
+{Long:110.345847,Lat:25.233945},
+{Long:110.348087,Lat:25.23228},
+{Long:110.349547,Lat:25.231507},
+{Long:110.35183,Lat:25.23021},
+{Long:110.351035,Lat:25.22892},
+{Long:110.34993,Lat:25.22751},
+{Long:110.348785,Lat:25.226035},
+{Long:110.34708,Lat:25.224167},
+{Long:110.345452,Lat:25.222407},
+{Long:110.343372,Lat:25.220462},
+{Long:110.340605,Lat:25.219122},
+{Long:110.336942,Lat:25.21739},
+{Long:110.33199,Lat:25.217495},
+{Long:110.327175,Lat:25.218385},
+{Long:110.32237,Lat:25.219242},
+{Long:110.31847,Lat:25.21913},
+{Long:110.31508,Lat:25.218192},
+{Long:110.3118,Lat:25.217262},
+{Long:110.30826,Lat:25.216495},
+{Long:110.304447,Lat:25.21566},
+{Long:110.300575,Lat:25.2148},
+{Long:110.29703,Lat:25.213525},
+{Long:110.295602,Lat:25.21292},
+{Long:110.292175,Lat:25.212755},
+{Long:110.289707,Lat:25.212705},
+{Long:110.28745,Lat:25.212705},
+{Long:110.284115,Lat:25.213165},
+{Long:110.283675,Lat:25.213287},
+{Long:110.283675,Lat:25.213287},
+{Long:110.283675,Lat:25.213287},
+{Long:110.283075,Lat:25.212827},
+{Long:110.28313,Lat:25.21059},
+{Long:110.283142,Lat:25.21},
+{Long:110.28317,Lat:25.207875},
+{Long:110.283182,Lat:25.20724}
+
+
+ ];
+     var listLast = list.length-1;
+     // 百度地图API功能
+     var map = new BMap.Map("allmap");    // 创建Map实例
+     map.addControl(new BMap.NavigationControl());
+     map.addControl(new BMap.ScaleControl());
+     map.addControl(new BMap.OverviewMapControl({isOpen: true}));
+     map.centerAndZoom(new BMap.Point(list[0].Long,list[0].Lat), 15);  // 初始化地图,设置中心点坐标和地图级别
+     map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+     map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+ 
+     setTimeout(drawIcon,500);
+     setTimeout(play,500);
+     var carMk;
+     var myBeginIcon = new BMap.Icon("https://canonconan.github.io/huaren/%E8%B5%B7%E7%82%B9.png", new BMap.Size(25,37), {imageOffset: new BMap.Size(0, 0)});//人
+     var myEndIcon = new BMap.Icon("https://canonconan.github.io/huaren/%E7%BB%88%E7%82%B9.png", new BMap.Size(25,37), {imageOffset: new BMap.Size(0, 0)});//人
+ 
+     //show_mycat("这里是地址",106.652024,26.617221);
+     //展示bd地址
+     var car = "";
+     function show_mycat(address,long,lat){
+ 
+         if(car) map.removeOverlay(car)
+         label = new BMap.Label(address, {offset: new BMap.Size(-20, -20)});
+         car = new BMap.Marker(new BMap.Point(long,lat));
+         car.setLabel(label);
+         map.addOverlay(car);
+         map.panTo(new BMap.Point(long, lat));
+ 
+     }    
+ 
+     //显示原始路线
+     function drawGreenLine(i,color,weitht){
+ 
+         var polyline = new BMap.Polyline([
+             new BMap.Point(list[i].Long,list[i].Lat),//起始点的经纬度
+             new BMap.Point(list[i+1].Long,list[i+1].Lat)//终点的经纬度
+         ], {strokeColor:color,//设置颜色
+             strokeWeight:weitht, //宽度
+             strokeOpacity:1});//透明度
+         map.addOverlay(polyline);
+ 
+     }
+ 
+     //获取路线
+      function drawGreenAddress(i,color,weitht){
+ 
+         if(i%2==0){ //不能太频繁请求百度地址,这里可能会改大
+             var geoc = new BMap.Geocoder();
+             geoc.getLocation(new BMap.Point(list[i].Long,list[i].Lat),function(rs){
+             var addComp = rs.addressComponents;
+             address =  addComp.province + addComp.city  + addComp.district + addComp.street  + addComp.streetNumber;
+             $("#allmap_value").val(address)
+             });
+         }
+     }
+ 
+     function lineAddress(i,color,weitht){
+         drawGreenLine(i,color,weitht)
+         drawGreenAddress(i,color,weitht)
+     }
+ 
+     function drawIcon(){
+         if(carMk){
+             map.removeOverlay(carMk);
+         }
+         carMk2 = new BMap.Marker(
+                 new BMap.Point(list[0].Long,list[0].Lat),//起始点的经纬度
+                 {icon:myBeginIcon});
+         map.addOverlay(carMk2);
+ 
+         carMk = new BMap.Marker(
+                 new BMap.Point(list[listLast].Long,list[listLast].Lat),//终点的经纬度
+                 {icon:myEndIcon});
+         map.addOverlay(carMk);
+ 
+         for(var i=0;i<list.length-1;i++){
+ 
+             drawGreenLine(i,"green",4);
+         }
+ 
+     }
+ 
+
+     //停止
+ function stop() {
+ 
+     if(timer) {
+         window.clearTimeout(timer);
+     }
+ }
+ //运行地图轨迹
+     function play(){
+      if(index < listLast){
+         lineAddress(index,"red",2);
+         //显示地址
+         show_mycat($("#allmap_value").val(),list[index+1].Long,list[index+1].Lat);
+ 
+         timer  = window.setTimeout("play(" + index + ",'red',2)", 500);
+         index++;
+ 
+      }
+ 
+     }
+
+ </script>
