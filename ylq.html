@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原料区</title>
+</head>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<style>
+  .h-1500px {
+    height: 1500px;
+  }
+
+  .w-4800px {
+    width: 4800px;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .mb-5px {
+    margin-bottom: 5px;
+  }
+
+  .mr-5px {
+    margin-right: 5px;
+  }
+
+  .h-120px {
+    height: 120px;
+  }
+
+  .w-120px {
+    width: 120px;
+  }
+
+  .b-1 {
+    border: 1px solid #000;
+  }
+
+  .bg-black {
+    background-color: #000;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .left-0 {
+    left: 0;
+  }
+
+  .top-0 {
+    top: 0;
+  }
+
+  .z-99 {
+    z-index: 99;
+  }
+
+  .box-border {
+    box-sizing: border-box;
+  }
+
+  .hasMaterial {
+    height: 100%;
+    background-color: blue;
+    color: #fff;
+  }
+
+  .hasStart {
+    height: 100%;
+    background-color: blue;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hasStart .top-left-triangle {
+    position: absolute;
+    top: 0px;
+    left: -30px;
+    width: 50px;
+    height: 20px;
+    background-color: #16e016;
+    transform: rotate(-45deg);
+  }
+
+  .hasProduce {
+    height: 100%;
+    background-color: blue;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hasProduce .top-left-triangle {
+    position: absolute;
+    top: 0px;
+    left: -30px;
+    width: 50px;
+    height: 20px;
+    background-color: #ffff00;
+    transform: rotate(-45deg);
+  }
+
+  .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+  }
+
+  .message {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+  }
+
+  .border {
+    text-align: left;
+    line-height: 30px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 600px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .tbl {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  .tbl tr {
+    height: 40px;
+  }
+
+  .tbl tr:nth-child(2n+1) {
+    background-color: #ebebeb;
+  }
+
+  .close-btn {
+    left: 50%;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #ccc;
+    border-radius: 5px;
+    margin: 20px auto;
+    text-align: center;
+  }
+
+  .center {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .color-white {
+    color: #fff;
+  }
+
+  .bg-gray {
+    background-color: #ccc;
+  }
+
+  .bottom-line {
+    position: relative;
+  }
+
+  .bottom-line::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: calc(100% + 8px);
+    height: 8px;
+    background-color: #787878;
+  }
+
+  .right-line {
+    position: relative;
+  }
+
+  .right-line::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -8px;
+    width: 8px;
+    height: calc(100% + 8px);
+    background-color: #787878;
+  }
+
+  .relative {
+    position: relative;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .crush-6000 {
+    font-size: 60px;
+    color: #686868;
+    left: 0;
+    top: 750px;
+  }
+
+  .door-29 {
+    font-size: 60px;
+    color: #686868;
+    left: 1125px;
+    top: 1200px;
+  }
+
+  .door-30 {
+    font-size: 60px;
+    color: #686868;
+    left: 2625px;
+    top: 1200px;
+  }
+
+  .door-31 {
+    font-size: 60px;
+    color: #686868;
+    left: 4125px;
+    top: 1200px;
+  }
+
+  .color-black {
+    height: 100%;
+    background-color: #0095ff;
+    color: #fff;
+  }
+</style>
+<div id="app">
+  <div class="h-1500px w-4800px flex flex-col relative">
+    <div v-for="(item, index) in 14" :key="index" class="mb-5px w-4800px flex">
+      <div v-for="(item1, index1) in 39" :key="index1" class="relative mr-5px box-border h-120px w-120px b-1 center"
+        :class="{'bottom-line':hasBottomLine(index,index1),'right-line':hasRightLine(index,index1),'bg-gray':hasGrayBox(index,index1)}">
+        <div v-if="hasGrayBox(index,index1)">{{ `不可存储：${item - 1}:${item1 - 1}` }}</div>
+        <div v-else-if="isIdle(index,index1)">{{ `闲置：${item - 1}:${item1 - 1}` }}</div>
+        <div v-else :class="{
+            hasMaterial:checkHasMaterialStatus(index,index1),
+            hasStart:checkHasStartStatus(index,index1),
+            hasProduce:checkHasProduceStatus(index,index1),
+          }
+        " @click='showDialog(index,index1)' class="center color-black">
+          <div>原料</div>
+          <div>{{dataDict[(item - 1) + '-' + (item1 - 1)]?.['646dafabfe56a2860cb683a0']}}</div>
+          <div>{{dataDict[(item - 1) + '-' + (item1 - 1)]?.['646dafabfe56a2860cb683a1']}}</div>
+          <div class="top-left-triangle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute crush-6000">6000破碎机</div>
+    <div class="absolute door-29">29号门</div>
+    <div class="absolute door-30">30号门</div>
+    <div class="absolute door-31">31号门</div>
+  </div>
+  <div class="dialog" v-show="visible">
+    <div class="border">
+      <div>
+        <div>供应商名称: {{dialogData['6473ff0c0160f7da7f35ee4c']}}</div>
+        <div>料型: <span v-for="item in (JSON.parse(dialogData['64773619470d51725f4375ac'] ?? null))">
+            {{item['name']}}
+          </span></div>
+        <div>总重量: {{dialogData['648d3768c147e33b856ff3f7']}}</div>
+        <div>库位: <span v-for="item in (JSON.parse(dialogData['646c29d95652178345bb9d52'] ?? null))">
+            {{item['name']}}
+          </span></div>
+        <table class="tbl">
+          <tr>
+            <th>车牌号</th>
+            <th>过毛日期</th>
+            <th>净重</th>
+            <th>质检照片</th>
+            <th>结算方式</th>
+          </tr>
+          <tr>
+            <td>{{dialogData['6489260be33fd697c3142c50']}}</td>
+            <td>{{dialogData['64868b9ad63d96de53cee9bc']}}</td>
+            <td>{{dialogData['646add5c2202a4511f55f2d6']}}</td>
+            <td>{{dialogData['64704a4a9b342d1434457859']}}</td>
+            <td>{{dialogData['64780fef9e4b31df4ed1970a']}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="close-btn" @click.stop="visible = false">关闭</div>
+    </div>
+  </div>
+</div>
+<script>
+  const { createApp } = Vue
+  createApp({
+    data() {
+      return {
+        //  坐标 index
+        //  状态 status 1:有原料，2：完成开机内审，3：排产生产中
+        //  车牌号 6489260be33fd697c3142c50
+        //  过毛日期 64868b9ad63d96de53cee9bc
+        //  净重 646add5c2202a4511f55f2d6
+        //  质检照片 qualityPhoto
+        //  结算方式 64780fef9e4b31df4ed1970a
+        dataList: [],
+        visible: false,
+        dataDict: {
+        },
+        rightList: ['0-35', '1-35', '2-35', '3-35', '4-35', '5-35', '6-35', '7-35', '8-35', '9-35', '10-35', '9-31', '10-31', '9-23', '10-23', '10-22', '9-19', '10-19', '9-11', '10-11', '9-7', '10-7'],
+        bottomList: ['9-0', '9-1', '9-2', '9-3', '9-4', '9-5', '9-6', '9-7', '9-12', '9-13', '9-14', '9-15', '9-16', '9-17', '9-18', '9-19', '9-24', '9-25', '9-26', '9-27', '9-28', '9-29', '9-30', '9-31'],
+        grayBox: [
+          '4-0', '4-1', '4-2', '4-3', '4-4', '4-5', '4-6',
+          '5-0', '5-1', '5-2', '5-3', '5-4', '5-5', '5-6',
+          '6-0', '6-1', '6-2', '6-3', '6-4', '6-5', '6-6', '6-7', '6-8', '6-9', '6-10',
+          '7-0', '7-1', '7-2', '7-3', '7-4', '7-5', '7-6', '7-7', '7-8', '7-9', '7-10',
+        ],
+        dialogData: {},
+      }
+    },
+    mounted() {
+      this.initData()
+    },
+    methods: {
+      initData() {
+        const params = {
+          "AppKey": "afc113a0c7a7c342",
+          "Sign": "NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==",
+          "worksheetId": "zmdkqkwgl",
+          "viewId": "646c2ff02202a4511f58896a"
+        }
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        }
+        fetch('https://api.mingdao.com/v2/open/worksheet/getFilterRows', options)
+          .then(data => {
+            return data.json()
+          }).then(res => {
+            let rowList = []
+            this.dataList = []
+            this.dataDict = {}
+            res.data.rows.forEach(item => {
+              item.rows.forEach(async items => {
+                const currentItems = JSON.parse(items)
+                if (currentItems['646c29d95652178345bb9d53'] == '1') {
+                  const indexArray = currentItems['648804e5b4176ad0fb9d66b7'].split('：')
+                  const rowId = currentItems.rowid
+                  const itemRes = await fetch(`https://api.mingdao.com/v2/open/worksheet/getRowById?AppKey=afc113a0c7a7c342&Sign=NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==&worksheetId=zmdkqkwgl&rowId=${rowId}`)
+                  const itemResJson = await itemRes.json()
+                  rowList.push({ index: `${indexArray[0]}-${indexArray[1]}`, rowId, ...itemResJson.data })
+                  this.dataList.push({ index: `${indexArray[0]}-${indexArray[1]}`, rowId, ...itemResJson.data })
+                  this.dataDict[`${indexArray[0]}-${indexArray[1]}`] = { index: `${indexArray[0]}-${indexArray[1]}`, rowId, ...itemResJson.data }
+                }
+              })
+            });
+          })
+      },
+      hasBottomLine(item, item1) {
+        return this.bottomList.includes(`${item}-${item1}`)
+      },
+      hasRightLine(item, item1) {
+        return this.rightList.includes(`${item}-${item1}`)
+      },
+      hasGrayBox(item, item1) {
+        return this.grayBox.includes(`${item}-${item1}`)
+      },
+      showDialog(item, item1) {
+        this.dialogData = {}
+        let currentItem = this.dataDict[`${item}-${item1}`]
+        let rowIds = JSON.parse(currentItem['646c29d95652178345bb9d53'])
+        if (!rowIds || rowIds.length == 0) {
+          return
+        }
+        rowIds.forEach(rowId => {
+          const params = new URLSearchParams();
+          params.append('AppKey', 'afc113a0c7a7c342')
+          params.append('Sign', 'NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==')
+          params.append('worksheetId', '646c287f83230a7e58e6e6cd')
+          params.append('rowId', rowId)
+          const options = {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }
+          fetch('https://api.mingdao.com/v2/open/worksheet/getRowById?' + params.toString(), options)
+            .then(data => {
+              return data.json()
+            }).then(res => {
+              this.dialogData = res.data
+            })
+        })
+        this.visible = true
+      },
+      checkHasMaterialStatus(item, item1) {
+        const data = this.dataDict[`${item}-${item1}`]
+        if (data) {
+          const materials = JSON.parse(data['646c29d95652178345bb9d53'])
+          if (materials && materials.length > 0) {
+            return true
+          }
+        }
+        return false
+      },
+      checkHasStartStatus(item, item1) {
+        const data = this.dataDict[`${item}-${item1}`]
+        return data['6479b0c22a341b4ea79374ad'] == '完成'
+      },
+      checkHasProduceStatus(item, item1) {
+        const data = this.dataDict[`${item}-${item1}`]
+        return data['646dc8fcfe56a2860cb6c34c'] == '1'
+      },
+      isIdle(item, item1) {
+        const isIdle = this.dataDict[`${item}-${item1}`]
+        return !isIdle
+      },
+    }
+  }).mount('#app')
+</script>
+
+</html>
