@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>成品区</title>
+</head>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<style>
+  .h-1500px {
+    height: 1500px;
+  }
+
+  .w-3000px {
+    width: 3000px;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .mb-5px {
+    margin-bottom: 5px;
+  }
+
+  .mr-5px {
+    margin-right: 5px;
+  }
+
+  .h-120px {
+    height: 120px;
+  }
+
+  .w-120px {
+    width: 120px;
+  }
+
+  .b-1 {
+    border: 1px solid #000;
+  }
+
+  .bg-black {
+    background-color: #000;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .left-0 {
+    left: 0;
+  }
+
+  .top-0 {
+    top: 0;
+  }
+
+  .z-99 {
+    z-index: 99;
+  }
+
+  .box-border {
+    box-sizing: border-box;
+  }
+
+  .hasMaterial {
+    height: 100%;
+    background-color: blue;
+    color: #fff;
+  }
+
+  .hasProduce {
+    height: 100%;
+    background-color: blue;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hasProduce .top-left-triangle {
+    position: absolute;
+    top: 0px;
+    left: -30px;
+    width: 50px;
+    height: 20px;
+    background-color: #00ff73;
+    transform: rotate(-45deg);
+  }
+
+  .hasReproduce {
+    height: 100%;
+    background-color: blue;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hasReproduce .top-left-triangle {
+    position: absolute;
+    top: 0px;
+    left: -30px;
+    width: 50px;
+    height: 20px;
+    background-color: #ffff00;
+    transform: rotate(-45deg);
+  }
+
+  .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+  }
+
+  .message {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+  }
+
+  .border {
+    text-align: left;
+    line-height: 30px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 400px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .tbl {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  .tbl tr {
+    height: 40px;
+  }
+
+  .tbl tr:nth-child(2n+1) {
+    background-color: #ebebeb;
+  }
+
+  .close-btn {
+    left: 50%;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #ccc;
+    border-radius: 5px;
+    margin: 20px auto;
+    text-align: center;
+  }
+
+  .center {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .color-white {
+    color: #fff;
+  }
+
+  .bg-gray {
+    background-color: #ccc;
+  }
+
+  .bottom-line {
+    position: relative;
+  }
+
+  .bottom-line::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: calc(100% + 8px);
+    height: 8px;
+    background-color: #787878;
+  }
+
+  .right-line {
+    position: relative;
+  }
+
+  .right-line::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -8px;
+    width: 8px;
+    height: calc(100% + 8px);
+    background-color: #787878;
+  }
+
+  .relative {
+    position: relative;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .coloured {
+    font-size: 60px;
+    color: #686868;
+    left: 1125px;
+    top: 275px;
+  }
+
+  .crush-3000 {
+    font-size: 60px;
+    color: #686868;
+    left: 1000px;
+    top: 3125px;
+  }
+
+  .door-25 {
+    font-size: 60px;
+    color: #686868;
+    left: 2200px;
+    top: 4700px;
+  }
+
+  .door-26 {
+    font-size: 60px;
+    color: #686868;
+    left: 2200px;
+    top: 3225px;
+  }
+
+  .door-27 {
+    font-size: 60px;
+    color: #686868;
+    left: 2200px;
+    top: 1725px;
+  }
+
+  .door-28 {
+    font-size: 60px;
+    color: #686868;
+    left: 2660px;
+    top: 1200px;
+  }
+
+  .door-small {
+    font-size: 60px;
+    color: #686868;
+    left: 2200px;
+    top: 5100px;
+  }
+
+  .color-black {
+    height: 100%;
+    background-color: #ff6bb6;
+    color: #fff;
+  }
+</style>
+<div id="app">
+  <div class="h-1500px w-3000px flex flex-col relative">
+    <div v-for="(item, index) in 46" :key="index" class="mb-5px w-3000px flex">
+      <div v-for="(item1, index1) in 25" :key="index1" class="relative mr-5px box-border h-120px w-120px b-1 center"
+        :class="{'bottom-line':hasBottomLine(index,index1),'right-line':hasRightLine(index,index1),'bg-gray':hasGrayBox(index,index1)}">
+        <div v-if="hasGrayBox(index,index1)">{{ `不可存储：${item - 1}:${item1 - 1}` }}</div>
+        <div v-else-if="isIdle(index,index1)">{{ `闲置：${item - 1}:${item1 - 1}` }}</div>
+        <div v-else :class="{
+            hasMaterial:checkHasMaterialStatus(index,index1),
+            hasProduce:checkHasProduceStatus(index,index1),
+            hasReproduce:checkHasReproduceStatus(index,index1),
+          }
+        " class="center color-black">
+          <div>成品</div>
+          <div>华仁</div>
+          <div>料型: <span v-for="item in (JSON.parse(dialogData[(item - 1) + '-' + (item1 - 1)]?.['643f49142a2838d960139f68'] ?? null))">
+            {{item['name']}}
+          </span></div>
+          <div>重量: {{dialogData[(item - 1) + '-' + (item1 - 1)]?.['643f4996e349c6fdd8a138df']}}</div>
+          <div class="top-left-triangle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute coloured">有色分选线</div>
+    <div class="absolute crush-3000">3000破碎机</div>
+    <div class="absolute door-small">小门</div>
+    <div class="absolute door-25">25号门</div>
+    <div class="absolute door-26">26号门</div>
+    <div class="absolute door-27">27号门</div>
+    <div class="absolute door-28">28号门</div>
+  </div>
+</div>
+<script>
+  const { createApp } = Vue
+  createApp({
+    data() {
+      return {
+        //  有原料 
+        // mergeData: [{ star: [1, 1], end: [7, 6] }]
+        //  坐标 index
+        //  状态 status 1:有原料，2：完成开机内审，3：排产生产中
+        //  供货商名称 name
+        //  料型 material
+        //  总重量 totalWeight
+        //  车牌号 carNumber
+        //  过毛日期 grossDate
+        //  净重 netWeight
+        //  质检照片 qualityPhoto
+        //  结算方式 settlementMethod
+        //  库位 warehouse
+        dataList: [],
+        dataDict: {},
+        currentItem: {},
+        rightList: [
+          '9-21', '10-21',
+          '9-23', '10-23',
+          '10-18',
+          '11-18',
+          '16-18', '17-18', '18-18', '19-18', '20-18', '21-18', '22-18', '23-18',
+          '28-18', '29-18', '30-18', '31-18', '32-18', '33-18', '34-18', '35-18',
+          '42-18', '43-18', '44-18',
+        ],
+        bottomList: [
+          '9-19', '9-20', '9-21', '9-24',
+          '11-18', '11-19',
+          '15-18', '15-19',
+          '23-18', '23-19',
+          '27-18', '27-19',
+          '35-18', '35-19',
+          '39-18', '39-19',
+          '44-0', '44-1', '44-2', '44-3', '44-4', '44-5', '44-6', '44-7', '44-8', '44-9', '44-10', '44-11', '44-12', '44-13', '44-14', '44-15', '44-16', '44-17', '44-18',
+        ],
+        grayBox: [
+          '1-4', '1-5', '1-6', '1-7', '1-8', '1-9', '1-10', '1-11', '1-12', '1-13', '1-14', '1-15', '1-16', '1-17', '1-18', '1-19', '1-20', '1-21', '1-22',
+          '2-4', '2-5', '2-6', '2-7', '2-8', '2-9', '2-10', '2-11', '2-12', '2-13', '2-14', '2-15', '2-16', '2-17', '2-18', '2-19', '2-20', '2-21', '2-22',
+          '3-4', '3-5', '3-6', '3-7', '3-8', '3-9', '3-10', '3-11', '3-12', '3-13', '3-14', '3-15', '3-16', '3-17', '3-18', '3-19', '3-20', '3-21', '3-22',
+          '4-22', '4-23', '4-24',
+          '5-22', '5-23', '5-24',
+          '6-22', '6-23', '6-24',
+          '7-22', '7-23', '7-24',
+          '5-14',
+          '6-14',
+          '7-14',
+          '8-14',
+          '9-15',
+          '10-16', '10-17',
+          '16-9',
+          '17-9',
+          '18-6', '18-7', '18-8', '18-9', '18-10', '18-11', '18-12',
+          '19-6', '19-7', '19-8', '19-9', '19-10', '19-11', '19-12',
+          '20-6', '20-7', '20-8', '20-9', '20-10', '20-11', '20-12',
+          '21-6', '21-7', '21-8', '21-9', '21-10', '21-11', '21-12',
+          '22-6', '22-7', '22-8', '22-9', '22-10', '22-11', '22-12',
+          '23-6', '23-7', '23-8', '23-9', '23-10', '23-11', '23-12',
+          '24-6', '24-7', '24-8', '24-9', '24-10', '24-11', '24-12',
+          '25-6', '25-7', '25-8', '25-9', '25-10', '25-11', '25-12',
+          '26-6', '26-7', '26-8', '26-9', '26-10', '26-11', '26-12',
+          '27-6', '27-7', '27-8', '27-9', '27-10', '27-11', '27-12',
+          '28-6', '28-7', '28-8', '28-9', '28-10', '28-11', '28-12',
+          '29-6', '29-7', '29-8', '29-9', '29-10', '29-11', '29-12',
+          '30-6', '30-7', '30-8', '30-9', '30-10', '30-11', '30-12',
+          '31-6', '31-7', '31-8', '31-9', '31-10', '31-11',
+        ],
+        dialogData: [],
+      }
+    },
+    mounted() {
+      this.initData()
+    },
+    methods: {
+      initData() {
+        const params = {
+          "AppKey": "afc113a0c7a7c342",
+          "Sign": "NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==",
+          "worksheetId": "zmdkqkwgl",
+          "viewId": "647466496941b0dcb4ed7173"
+        }
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        }
+        fetch('https://api.mingdao.com/v2/open/worksheet/getFilterRows', options)
+          .then(data => {
+            return data.json()
+          }).then(res => {
+            let rowList = []
+            this.dataList = []
+            this.dataDict = {}
+            res.data.rows.forEach(item => {
+              item.rows.forEach(async items => {
+                const currentItems = JSON.parse(items)
+                if (currentItems['647ec753de4099b724f48720'] == '1') {
+                  const indexArray = currentItems['648804e5b4176ad0fb9d66b7'].split('：')
+                  const rowId = currentItems.rowid
+                  const itemRes = await fetch(`https://api.mingdao.com/v2/open/worksheet/getRowById?AppKey=afc113a0c7a7c342&Sign=NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==&worksheetId=zmdkqkwgl&rowId=${rowId}`)
+                  const itemResJson = await itemRes.json()
+                  rowList.push({ index: `${indexArray[0]}-${indexArray[1]}`, rowId, ...itemResJson.data })
+                  this.dataList.push({ index: `${indexArray[0]}-${indexArray[1]}`, rowId, ...itemResJson.data })
+                  this.dataDict[`${indexArray[0]}-${indexArray[1]}`] = { index: `${indexArray[0]}-${indexArray[1]}`, rowId, ...itemResJson.data }
+
+                  let currentItem = this.dataDict[`${indexArray[0]}-${indexArray[1]}`]
+                  let rowIds = JSON.parse(currentItem['647ec753de4099b724f48720'])
+                  if (!rowIds || rowIds.length == 0) {
+                    return
+                  }
+                  rowIds.forEach(rowId => {
+                    const params = new URLSearchParams();
+                    params.append('AppKey', 'afc113a0c7a7c342')
+                    params.append('Sign', 'NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==')
+                    params.append('worksheetId', '646ac34846421ea770e35e1d')
+                    params.append('rowId', rowId)
+                    const options = {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      }
+                    }
+                    fetch('https://api.mingdao.com/v2/open/worksheet/getRowById?' + params.toString(), options)
+                      .then(data => {
+                        return data.json()
+                      }).then(res => {
+                        this.dialogData[`${indexArray[0]}-${indexArray[1]}`] = res.data
+                      })
+                  })
+                }
+              })
+            });
+          })
+      },
+      hasBottomLine(item, item1) {
+        return this.bottomList.includes(`${item}-${item1}`)
+      },
+      hasRightLine(item, item1) {
+        return this.rightList.includes(`${item}-${item1}`)
+      },
+      hasGrayBox(item, item1) {
+        return this.grayBox.includes(`${item}-${item1}`)
+      },
+      checkHasMaterialStatus(item, item1) {
+        const data = this.dataDict[`${item}-${item1}`]
+        if (data) {
+          const materials = JSON.parse(data['647ec753de4099b724f48720'])
+          if (materials && materials.length > 0) {
+            return true
+          }
+        }
+        return false
+      },
+      checkHasProduceStatus(item, item1) {
+        const data = this.dataDict[`${item}-${item1}`]
+        return data['646dc8fcfe56a2860cb6c34c'] == '1'
+      },
+      checkHasReproduceStatus(item, item1) {
+        const data = this.dialogData[`${item}-${item1}`]
+        console.log(data)
+        return data?.['64a22635b84ee2399d8504f0'] == '1'
+      },
+      isIdle(item, item1) {
+        const isIdle = this.dataDict[`${item}-${item1}`]
+        return !isIdle
+      },
+    }
+  }).mount('#app')
+</script>
+
+</html>
