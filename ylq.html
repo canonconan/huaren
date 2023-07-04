@@ -7,6 +7,8 @@
   <title>原料区</title>
 </head>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/@vueuse/shared"></script>
+<script src="https://unpkg.com/@vueuse/core"></script>
 <style>
   .h-1500px {
     height: 1500px;
@@ -250,6 +252,7 @@
     color: #fff;
   }
 </style>
+
 <div id="app">
   <div class="h-1500px w-4800px flex flex-col relative">
     <div v-for="(item, index) in 14" :key="index" class="mb-5px w-4800px flex">
@@ -258,11 +261,11 @@
         <div v-if="hasGrayBox(index,index1)">{{ `不可存储：${item - 1}:${item1 - 1}` }}</div>
         <div v-else-if="isIdle(index,index1)">{{ `闲置：${item - 1}:${item1 - 1}` }}</div>
         <div v-else :class="{
-            hasMaterial:checkHasMaterialStatus(index,index1),
-            hasStart:checkHasStartStatus(index,index1),
-            hasProduce:checkHasProduceStatus(index,index1),
-          }
-        " @click='showDialog(index,index1)' class="center color-black">
+              hasMaterial:checkHasMaterialStatus(index,index1),
+              hasStart:checkHasStartStatus(index,index1),
+              hasProduce:checkHasProduceStatus(index,index1),
+            }
+          " @click='showDialog(index,index1)' class="center color-black">
           <div>原料</div>
           <div>{{dataDict[(item - 1) + '-' + (item1 - 1)]?.['646dafabfe56a2860cb683a0']}}</div>
           <div>{{dataDict[(item - 1) + '-' + (item1 - 1)]?.['646dafabfe56a2860cb683a1']}}</div>
@@ -299,7 +302,8 @@
             <td>{{dialogData['64868b9ad63d96de53cee9bc']}}</td>
             <td>{{dialogData['646add5c2202a4511f55f2d6']}}</td>
             <td>
-              <div v-for="item in (JSON.parse(dialogData['64704a4a9b342d1434457859'] ?? null))">
+              <div
+                v-for="item in (JSON.parse(dialogData['64704a4a9b342d1434457859'] != '' ? (dialogData['64704a4a9b342d1434457859'] ?? null) : null))">
                 <a :href="item['original_file_full_path']" target="_blank">{{item['original_file_name']}}</a>
               </div>
             </td>
@@ -311,6 +315,7 @@
     </div>
   </div>
 </div>
+
 <script>
   const { createApp } = Vue
   createApp({
@@ -412,6 +417,7 @@
               return data.json()
             }).then(res => {
               this.dialogData = res.data
+              console.log(this.dialogData)
             })
         })
         this.visible = true
