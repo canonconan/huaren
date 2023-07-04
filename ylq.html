@@ -298,7 +298,11 @@
             <td>{{dialogData['6489260be33fd697c3142c50']}}</td>
             <td>{{dialogData['64868b9ad63d96de53cee9bc']}}</td>
             <td>{{dialogData['646add5c2202a4511f55f2d6']}}</td>
-            <td>{{dialogData['64704a4a9b342d1434457859']}}</td>
+            <td>
+              <div v-for="item in (JSON.parse(dialogData['64704a4a9b342d1434457859'] ?? null))">
+                <a :href="item['original_file_full_path']" target="_blank">{{item['original_file_name']}}</a>
+              </div>
+            </td>
             <td>{{dialogData['64780fef9e4b31df4ed1970a']}}</td>
           </tr>
         </table>
