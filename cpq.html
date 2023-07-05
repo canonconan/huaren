@@ -8,6 +8,10 @@
 </head>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <style>
+  body {
+    user-select: none;
+  }
+
   .h-1500px {
     height: 1500px;
   }
@@ -272,7 +276,9 @@
   }
 </style>
 <div id="app">
-  <div class="h-1500px w-3000px flex flex-col relative">
+  <div class="h-1500px w-3000px flex flex-col relative" ref="dragCon" @wheel.prevent="handleWheel($event)"
+    @mousedown="mouseDown($event)" @mouseup="mouseUp($event)" @mousemove="mouseMove($event)"
+    :style="{left: appX + 'px', top: appY + 'px', transform: scaleStyle}">
     <div v-for="(item, index) in 46" :key="index" class="mb-5px w-3000px flex">
       <div v-for="(item1, index1) in 25" :key="index1" class="relative mr-5px box-border h-120px w-120px b-1 center"
         :class="{'bottom-line':hasBottomLine(index,index1),'right-line':hasRightLine(index,index1),'bg-gray':hasGrayBox(index,index1)}">
@@ -286,9 +292,10 @@
         " class="center color-black">
           <div>成品</div>
           <div>华仁</div>
-          <div>料型: <span v-for="item in (JSON.parse(dialogData[(item - 1) + '-' + (item1 - 1)]?.['643f49142a2838d960139f68'] ?? null))">
-            {{item['name']}}
-          </span></div>
+          <div>料型: <span
+              v-for="item in (JSON.parse(dialogData[(item - 1) + '-' + (item1 - 1)]?.['643f49142a2838d960139f68'] ?? null))">
+              {{item['name']}}
+            </span></div>
           <div>重量: {{dialogData[(item - 1) + '-' + (item1 - 1)]?.['643f4996e349c6fdd8a138df']}}</div>
           <div class="top-left-triangle"></div>
         </div>
@@ -308,19 +315,6 @@
   createApp({
     data() {
       return {
-        //  有原料 
-        // mergeData: [{ star: [1, 1], end: [7, 6] }]
-        //  坐标 index
-        //  状态 status 1:有原料，2：完成开机内审，3：排产生产中
-        //  供货商名称 name
-        //  料型 material
-        //  总重量 totalWeight
-        //  车牌号 carNumber
-        //  过毛日期 grossDate
-        //  净重 netWeight
-        //  质检照片 qualityPhoto
-        //  结算方式 settlementMethod
-        //  库位 warehouse
         dataList: [],
         dataDict: {},
         currentItem: {},
@@ -375,12 +369,59 @@
           '31-6', '31-7', '31-8', '31-9', '31-10', '31-11',
         ],
         dialogData: [],
+        move: false,
+        mouseDownX: 0,
+        mouseDownY: 0,
+        mouseDownAppX: 0,
+        mouseDownAppY: 0,
+        appX: 0,
+        appY: 0,
+        scaleStyle: 'scale(1)',
       }
     },
     mounted() {
       this.initData()
     },
     methods: {
+      mouseDown(event) {
+        this.move = true
+        this.mouseDownX = event.clientX
+        this.mouseDownY = event.clientY
+        this.mouseDownAppX = this.appX
+        this.mouseDownAppY = this.appY
+      },
+      mouseMove(event) {
+        if (this.move) {
+          this.appX = this.mouseDownAppX + event.clientX - this.mouseDownX
+          this.appY = this.mouseDownAppY + event.clientY - this.mouseDownY
+        }
+      },
+      mouseUp(event) {
+        this.move = false
+      },
+      // 监听滚轮滚动事件
+      handleWheel(event) {
+        let obj = this.$refs.dragCon;
+        return this.tableZoom(obj, event);
+      },
+      tableZoom(obj, event) {
+        // 设置元素缩放  这里使用transform: scale实现；你也可以使用 zoom 来实现
+        let scale = this.scaleStyle.replace('scale(', '').replace(')', '') * 100;
+        scale += event.wheelDelta / 50;
+        // 限制最小缩小到30%
+        if (scale < 30) {
+          scale = 30
+        }
+        // 限制最大可放大到2倍
+        if (scale > 200) {
+          scale = 200
+        }
+        // 设置元素transform
+        if (scale > 0) {
+          this.scaleStyle = `scale(${scale / 100})`;
+        }
+        return false;
+      },
       initData() {
         const params = {
           "AppKey": "afc113a0c7a7c342",
@@ -468,7 +509,6 @@
       },
       checkHasReproduceStatus(item, item1) {
         const data = this.dialogData[`${item}-${item1}`]
-        console.log(data)
         return data?.['64a22635b84ee2399d8504f0'] == '1'
       },
       isIdle(item, item1) {
