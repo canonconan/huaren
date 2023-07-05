@@ -6,12 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>原料区</title>
 </head>
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://unpkg.com/@vueuse/shared"></script>
-<script src="https://unpkg.com/@vueuse/core"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.min.js"></script>
+
 <style>
-  .h-1500px {
-    height: 1500px;
+  body {
+    user-select: none;
+  }
+
+  .h-1750px {
+    height: 1750px;
   }
 
   .w-4800px {
@@ -251,21 +254,30 @@
     background-color: #0095ff;
     color: #fff;
   }
-</style>
 
+  #app {
+    position: relative;
+    width: 5000px;
+    height: 3000px;
+  }
+</style>
 <div id="app">
-  <div class="h-1500px w-4800px flex flex-col relative">
+  <div class="h-1750px w-4800px flex flex-col relative" ref="dragCon"
+    @wheel.prevent="handleWheel($event)" @mousedown="mouseDown($event)" @mouseup="mouseUp($event)"
+    @mousemove="mouseMove($event)"
+    :style="{left: appX + 'px', top: appY + 'px', transform: scaleStyle}"
+    >
     <div v-for="(item, index) in 14" :key="index" class="mb-5px w-4800px flex">
       <div v-for="(item1, index1) in 39" :key="index1" class="relative mr-5px box-border h-120px w-120px b-1 center"
         :class="{'bottom-line':hasBottomLine(index,index1),'right-line':hasRightLine(index,index1),'bg-gray':hasGrayBox(index,index1)}">
         <div v-if="hasGrayBox(index,index1)">{{ `不可存储：${item - 1}:${item1 - 1}` }}</div>
         <div v-else-if="isIdle(index,index1)">{{ `闲置：${item - 1}:${item1 - 1}` }}</div>
         <div v-else :class="{
-              hasMaterial:checkHasMaterialStatus(index,index1),
-              hasStart:checkHasStartStatus(index,index1),
-              hasProduce:checkHasProduceStatus(index,index1),
-            }
-          " @click='showDialog(index,index1)' class="center color-black">
+            hasMaterial:checkHasMaterialStatus(index,index1),
+            hasStart:checkHasStartStatus(index,index1),
+            hasProduce:checkHasProduceStatus(index,index1),
+          }
+        " @click.stop='showDialog(index,index1)' class="center color-black">
           <div>原料</div>
           <div>{{dataDict[(item - 1) + '-' + (item1 - 1)]?.['646dafabfe56a2860cb683a0']}}</div>
           <div>{{dataDict[(item - 1) + '-' + (item1 - 1)]?.['646dafabfe56a2860cb683a1']}}</div>
@@ -278,6 +290,7 @@
     <div class="absolute door-30">30号门</div>
     <div class="absolute door-31">31号门</div>
   </div>
+
   <div class="dialog" v-show="visible">
     <div class="border">
       <div>
@@ -315,19 +328,11 @@
     </div>
   </div>
 </div>
-
 <script>
-  const { createApp } = Vue
+  const { createApp, ref } = Vue
   createApp({
     data() {
       return {
-        //  坐标 index
-        //  状态 status 1:有原料，2：完成开机内审，3：排产生产中
-        //  车牌号 6489260be33fd697c3142c50
-        //  过毛日期 64868b9ad63d96de53cee9bc
-        //  净重 646add5c2202a4511f55f2d6
-        //  质检照片 qualityPhoto
-        //  结算方式 64780fef9e4b31df4ed1970a
         dataList: [],
         visible: false,
         dataDict: {
@@ -341,12 +346,59 @@
           '7-0', '7-1', '7-2', '7-3', '7-4', '7-5', '7-6', '7-7', '7-8', '7-9', '7-10',
         ],
         dialogData: {},
+        move: false,
+        mouseDownX: 0,
+        mouseDownY: 0,
+        mouseDownAppX: 0,
+        mouseDownAppY: 0,
+        appX: 0,
+        appY: 0,
+        scaleStyle: 'scale(1)',
       }
     },
     mounted() {
       this.initData()
     },
     methods: {
+      mouseDown(event) {
+        this.move = true
+        this.mouseDownX = event.clientX
+        this.mouseDownY = event.clientY
+        this.mouseDownAppX = this.appX
+        this.mouseDownAppY = this.appY
+      },
+      mouseMove(event) {
+        if (this.move) {
+          this.appX = this.mouseDownAppX + event.clientX - this.mouseDownX
+          this.appY = this.mouseDownAppY + event.clientY - this.mouseDownY
+        }
+      },
+      mouseUp(event) {
+        this.move = false
+      },
+      // 监听滚轮滚动事件
+      handleWheel(event) {
+        let obj = this.$refs.dragCon;
+        return this.tableZoom(obj, event);
+      },
+      tableZoom(obj, event) {
+        // 设置元素缩放  这里使用transform: scale实现；你也可以使用 zoom 来实现
+        let scale = this.scaleStyle.replace('scale(', '').replace(')', '') * 100;
+        scale += event.wheelDelta / 50;
+        // 限制最小缩小到30%
+        if (scale < 30) {
+          scale = 30
+        }
+        // 限制最大可放大到2倍
+        if (scale > 200) {
+          scale = 200
+        }
+        // 设置元素transform
+        if (scale > 0) {
+          this.scaleStyle = `scale(${scale / 100})`;
+        }
+        return false;
+      },
       initData() {
         const params = {
           "AppKey": "afc113a0c7a7c342",
