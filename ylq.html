@@ -467,7 +467,8 @@
             .then(data => {
               return data.json()
             }).then(res => {
-              this.dialogData = res.data
+              this.dialogData = res.data       
+              this.dialogData['647590a4470d51725f3fe527'] = currentItem['647590a4470d51725f3fe527']  
             })
         })
         this.visible = true
