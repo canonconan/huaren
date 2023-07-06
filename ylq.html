@@ -265,7 +265,7 @@
   <div class="h-1750px w-4800px flex flex-col relative" ref="dragCon"
     @wheel.prevent="handleWheel($event)" @mousedown="mouseDown($event)" @mouseup="mouseUp($event)"
     @mousemove="mouseMove($event)"
-    :style="{left: appX + 'px', top: appY + 'px', transform: scaleStyle}"
+    :style="{left: appX + 'px', top: appY + 'px', transform: scaleStyle, transformOrigin: '0 0'}"
     >
     <div v-for="(item, index) in 14" :key="index" class="mb-5px w-4800px flex">
       <div v-for="(item1, index1) in 39" :key="index1" class="relative mr-5px box-border h-120px w-120px b-1 center"
@@ -298,7 +298,7 @@
         <div>料型: <span v-for="item in (JSON.parse(dialogData['64773619470d51725f4375ac'] ?? null))">
             {{item['name']}}
           </span></div>
-        <div>总重量: {{dialogData['648d3768c147e33b856ff3f7']}}</div>
+        <div>总重量: {{dialogData['647590a4470d51725f3fe527']}}</div>
         <div>库位: <span v-for="item in (JSON.parse(dialogData['646c29d95652178345bb9d52'] ?? null))">
             {{item['name']}}
           </span></div>
@@ -335,8 +335,7 @@
       return {
         dataList: [],
         visible: false,
-        dataDict: {
-        },
+        dataDict: {},
         rightList: ['0-35', '1-35', '2-35', '3-35', '4-35', '5-35', '6-35', '7-35', '8-35', '9-35', '10-35', '9-31', '10-31', '9-23', '10-23', '10-22', '9-19', '10-19', '9-11', '10-11', '9-7', '10-7'],
         bottomList: ['9-0', '9-1', '9-2', '9-3', '9-4', '9-5', '9-6', '9-7', '9-12', '9-13', '9-14', '9-15', '9-16', '9-17', '9-18', '9-19', '9-24', '9-25', '9-26', '9-27', '9-28', '9-29', '9-30', '9-31'],
         grayBox: [
@@ -424,7 +423,7 @@
               item.rows.forEach(async items => {
                 const currentItems = JSON.parse(items)
                 if (currentItems['646c29d95652178345bb9d53'] == '1') {
-                  const indexArray = currentItems['648804e5b4176ad0fb9d66b7'].split('：')
+                  const indexArray = currentItems['648804e5b4176ad0fb9d66b7'].split(/[：:-]+/)
                   const rowId = currentItems.rowid
                   const itemRes = await fetch(`https://api.mingdao.com/v2/open/worksheet/getRowById?AppKey=afc113a0c7a7c342&Sign=NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==&worksheetId=zmdkqkwgl&rowId=${rowId}`)
                   const itemResJson = await itemRes.json()
@@ -434,7 +433,7 @@
                 }
               })
             });
-          })
+          })          
       },
       hasBottomLine(item, item1) {
         return this.bottomList.includes(`${item}-${item1}`)
@@ -469,7 +468,6 @@
               return data.json()
             }).then(res => {
               this.dialogData = res.data
-              console.log(this.dialogData)
             })
         })
         this.visible = true
