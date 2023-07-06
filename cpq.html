@@ -278,7 +278,7 @@
 <div id="app">
   <div class="h-1500px w-3000px flex flex-col relative" ref="dragCon" @wheel.prevent="handleWheel($event)"
     @mousedown="mouseDown($event)" @mouseup="mouseUp($event)" @mousemove="mouseMove($event)"
-    :style="{left: appX + 'px', top: appY + 'px', transform: scaleStyle}">
+    :style="{left: appX + 'px', top: appY + 'px', transform: scaleStyle, transformOrigin: '0 0'}">
     <div v-for="(item, index) in 46" :key="index" class="mb-5px w-3000px flex">
       <div v-for="(item1, index1) in 25" :key="index1" class="relative mr-5px box-border h-120px w-120px b-1 center"
         :class="{'bottom-line':hasBottomLine(index,index1),'right-line':hasRightLine(index,index1),'bg-gray':hasGrayBox(index,index1)}">
@@ -447,7 +447,7 @@
               item.rows.forEach(async items => {
                 const currentItems = JSON.parse(items)
                 if (currentItems['647ec753de4099b724f48720'] == '1') {
-                  const indexArray = currentItems['648804e5b4176ad0fb9d66b7'].split('：')
+                  const indexArray = currentItems['648804e5b4176ad0fb9d66b7'].split(/[：:-]+/)
                   const rowId = currentItems.rowid
                   const itemRes = await fetch(`https://api.mingdao.com/v2/open/worksheet/getRowById?AppKey=afc113a0c7a7c342&Sign=NWU3ZWRjNmNiMmVkYTk1MTBjMmMwYmFiNTZiMTE1YzkyNzg1ODVhMzYwNmMzYThhYjkzNzgzNDE2MDRkMTAyMg==&worksheetId=zmdkqkwgl&rowId=${rowId}`)
                   const itemResJson = await itemRes.json()
